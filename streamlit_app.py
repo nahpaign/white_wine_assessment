@@ -45,23 +45,31 @@ def app_body():
     st.title("Welcome to White Wine Quality Assessment!")
 
     if 'input_features' in st.session_state:
-        prediction = get_prediction(**st.session_state['input_features'])
+        try:
+            # Validate all values are numeric before predicting
+            for k, v in st.session_state['input_features'].items():
+                float(v)
 
-        if prediction >= 8:
-            st.success("🏆 **Excellent!** World-class wine!")
-            st.markdown("## 🍾🥂🌟")
-            st.balloons()
-        elif prediction >= 6:
-            st.info("👍 **Not Bad!** A solid, enjoyable wine.")
-            st.markdown("## 🍷😊")
-        elif prediction >= 5:
-            st.warning("😐 **Meh.** Drinkable, but nothing special.")
-            st.markdown("## 🍶🤷")
-        else:
-            st.error("🤢 **Gross!** Pour it down the drain.")
-            st.markdown("## 🪣😬")
+            prediction = get_prediction(**st.session_state['input_features'])
 
-        st.markdown(f"**Predicted Quality Score:** `{prediction:.2f} / 10`")
+            if prediction >= 8:
+                st.success("🏆 **Excellent!** World-class wine!")
+                st.markdown("## 🍾🥂🌟")
+                st.balloons()
+            elif prediction >= 6:
+                st.info("👍 **Not Bad!** A solid, enjoyable wine.")
+                st.markdown("## 🍷😊")
+            elif prediction >= 5:
+                st.warning("😐 **Meh.** Drinkable, but nothing special.")
+                st.markdown("## 🍶🤷")
+            else:
+                st.error("🤢 **Gross!** Pour it down the drain.")
+                st.markdown("## 🪣😬")
+
+            st.markdown(f"**Predicted Quality Score:** `{prediction:.2f} / 10`")
+
+        except ValueError:
+            st.warning("⚠️ Please enter valid numeric values for all fields.")
 
 def main():
     if 'input_features' not in st.session_state:
