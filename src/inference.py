@@ -15,6 +15,7 @@ def get_prediction(**kwargs):
         Returns:
             Predicted class in float.
     """
-    pred_df = pd.DataFrame(kwargs, index=[0])
-    pred = clf.predict(pred_df[features])
+    data = [[float(kwargs[f]) for f in features]]
+    pred_df = pd.DataFrame(data, columns=features)
+    pred = clf.predict(pred_df)
     return float(pred[0])
