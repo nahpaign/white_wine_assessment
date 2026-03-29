@@ -44,12 +44,8 @@ def app_sidebar():
 def app_body():
     st.title("Welcome to White Wine Quality Assessment!")
 
-    if 'input_features' in st.session_state:
+    if st.session_state.get('input_features'):  # only runs if dict is non-empty
         try:
-            # Validate all values are numeric before predicting
-            for k, v in st.session_state['input_features'].items():
-                float(v)
-
             prediction = get_prediction(**st.session_state['input_features'])
 
             if prediction >= 8:
@@ -68,7 +64,7 @@ def app_body():
 
             st.markdown(f"**Predicted Quality Score:** `{prediction:.2f} / 10`")
 
-        except ValueError:
+        except (ValueError, KeyError):
             st.warning("⚠️ Please enter valid numeric values for all fields.")
 
 def main():
