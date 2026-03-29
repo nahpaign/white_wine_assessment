@@ -42,20 +42,26 @@ def app_sidebar():
     return None
 
 def app_body():
-    title = '<p style="font-family:arial, sans-serif; color:Black; font-size: 40px;"><b> Welcome to White Wine Quality Assessment!</b></p>'
-    st.markdown(title, unsafe_allow_html=True)
-    default_msg = '**System assessment says:** {}'
-    if st.session_state['input_features']:
-        quality = get_prediction(**st.session_state['input_features'])
-        if quality >= 8:
-            st.success(default_msg.format('Excellent choice!'))
-        elif quality < 8 and quality >=6:
-            st.success(default_msg.format('Not too bad!'))
-        elif quality < 6 and quality >= 5:
-            st.success(default_msg.format('Mehhhhhhh'))
+    st.title("Welcome to White Wine Quality Assessment!")
+
+    if 'input_features' in st.session_state:
+        prediction = get_prediction(**st.session_state['input_features'])
+
+        if prediction >= 8:
+            st.success("🏆 **Excellent!** World-class wine!")
+            st.markdown("## 🍾🥂🌟")
+            st.balloons()
+        elif prediction >= 6:
+            st.info("👍 **Not Bad!** A solid, enjoyable wine.")
+            st.markdown("## 🍷😊")
+        elif prediction >= 5:
+            st.warning("😐 **Meh.** Drinkable, but nothing special.")
+            st.markdown("## 🍶🤷")
         else:
-            st.warning(default_msg.format('Grossssssssss'))
-    return None
+            st.error("🤢 **Gross!** Pour it down the drain.")
+            st.markdown("## 🪣😬")
+
+        st.markdown(f"**Predicted Quality Score:** `{prediction:.2f} / 10`")
 
 def main():
     if 'input_features' not in st.session_state:
